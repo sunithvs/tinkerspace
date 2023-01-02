@@ -1,6 +1,20 @@
 import React, {useEffect, useState} from 'react'
 import pic from '../../images/picture.png';
 
+// const myImage = new Image(100);
+// myImage.src = 'picture.png';
+// document.body.appendChild(myImage);
+
+const image_width =100;
+class GameObject {
+    constructor(context, x, y, vx, vy) {
+        this.context = context;
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.isColliding = false;
+    }
 }
 
 
@@ -190,9 +204,9 @@ class GameWorld {
     }
 
     circleIntersect(x1, y1, r1, x2, y2, r2) {
-            if(x2 < x1+ image_width && x2 > x1-image_width && y2 < y1+ image_width && y2 > y1-image_width )
-                return true
-            return  false
+        if(x2 < x1+ image_width && x2 > x1-image_width && y2 < y1+ image_width && y2 > y1-image_width )
+            return true
+        return  false
     }
 
     clearCanvas() {
