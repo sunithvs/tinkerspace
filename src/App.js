@@ -1,18 +1,8 @@
-import {useLogin} from "./hooks/userLogin";
+import "./App.css";
+import Router from "./routes/index";
 
-
-const App = () => {
-    const {login, isPending} = useLogin();
-    return (
-        <div className="App">
-            <button className="btn" onClick={login}>
-                {isPending ? "Loading..." : "Login With Github"}
-            </button>
-            <button className="btn">
-                Log Out
-            </button>
-        </div>
-    );
-};
+function App() {
+  return <Router />;
+}
 
 export default App;
