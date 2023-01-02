@@ -32,7 +32,7 @@ class Imageobject extends GameObject {
 
     draw() {
         const logo = new Image();
-        logo.src = pic;
+        logo.src = "https://cataas.com/cat";
         logo.width = image_width;
         logo.height = image_width;
         //Draw a simple image
@@ -46,6 +46,7 @@ class Imageobject extends GameObject {
         //Move with velocity x/y
         this.x += this.vx * secondsPassed;
         this.y += this.vy * secondsPassed;
+
     }
 }
 
