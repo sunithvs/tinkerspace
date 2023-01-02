@@ -6,35 +6,15 @@
   box-sizing: border-box;
 }
 
-.App {
-  font-family: "Overpass", sans-serif;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: hsl(216, 12%, 8%);
-}
+#background-video{
 
-.btn {
-  border: none;
-  background-color: hsl(25, 97%, 53%);
-  cursor: pointer;
-  border-radius: 6px;
-  color: white;
-  font-weight: bold;
-  padding: 12px 14px;
-  font-size: 18px;
-  margin-top: 8px;
-}
+  min-width: 100%;
+  min-height: 100%;
+  float: left;
+  top: 0;
+  z-index: -1;
+  padding: none;
+  position: fixed; /* optional depending on what you want to do in your app */
 
-.btn:hover {
-  background-color: hsla(25, 97%, 53%, 0.668);
-  transition: all 100ms linear;
-}
 
-.github-logo {
-  width: 18px;
-  margin-right: 6px;
-  vertical-align: middle;
 }
