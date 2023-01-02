@@ -1,7 +1,7 @@
 import {GithubAuthProvider, signInWithPopup} from "firebase/auth";
 import {auth} from "../firebase/config";
 import {useState} from "react";
-import {collection, addDoc} from "firebase/firestore";
+import {collection, addDoc, setDoc, doc} from "firebase/firestore";
 
 import {db} from '../firebase/config';
 
@@ -11,6 +11,18 @@ const add_profile = async () => {
             id: auth.currentUser.uid,
             name: auth.currentUser.displayName,
             profile_url: auth.currentUser.photoURL,
+        });
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+
+}
+const set_profile = async () => {
+    try {
+        await setDoc(doc(db, "users", auth.currentUser.uid), {
+            name: auth.currentUser.displayName,
+            profile_url: auth.currentUser.photoURL,
+            email: auth.currentUser.email,
         });
     } catch (e) {
         console.error("Error adding document: ", e);
@@ -33,13 +45,11 @@ export const useLogin = () => {
             if (!res) {
                 throw new Error("Could not complete signup");
             }
-
             const user = res.user;
             console.log(user);
             // read user data from firestore
             // const userRef = collection(db, "users");
-
-            await add_profile();
+            await set_profile();
             console.log("added profile");
             // const docRef = getDoc(db, "users", user.uid);
             setIsPending(false)
