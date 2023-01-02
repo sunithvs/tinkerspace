@@ -22,6 +22,7 @@ export const useLogin = () => {
     const [error, setError] = useState(false);
     const [isPending, setIsPending] = useState(false);
     const [rank, setRank] = useState(0);
+    const [user, setUser] = useState(undefined);
 
     const provider = new GithubAuthProvider();
 
@@ -51,6 +52,7 @@ export const useLogin = () => {
                     });
                 }
             );
+            setUser(user);
 
             console.log("added profile");
             // const docRef = getDoc(db, "users", user.uid);
@@ -63,5 +65,5 @@ export const useLogin = () => {
             setIsPending(false);
         }
     };
-    return {login, error, isPending, rank};
+    return {login, error, isPending, rank,user};
 };

@@ -1,48 +1,92 @@
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import * as React from "react";
 import {useLogin} from "../../hooks/useLogin";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import {useState} from "react";
+import "./style.css";
+
+function ordinal_suffix_of(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j === 1 && k !== 11) {
+        return  "st";
+    }
+    if (j === 2 && k !== 12) {
+        return  "nd";
+    }
+    if (j === 3 && k !== 13) {
+        return "rd";
+    }
+    return  "th";
+}
 
 const SignIn = () => {
+
     // logen in  state
-    const {login, isPending, rank} = useLogin();
+    const {login, isPending, rank, user} = useLogin();
     return !rank ? (
-        <section className="bg-gray-50 dark:bg-gray-900">
-            <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <div
-                    className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                    <div className="flex justify-center p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">Tinker
-                            wall</h1>
-                        <form className="space-y-4 md:space-y-6" action="#">
 
-                            <button
-                                type="submit"
-                                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                            >
-                                <Stack direction="row" spacing={2}>
-                                    <Button
-                                        variant="outlined"
-                                        onClick={() => login()}
-                                        startIcon={<GitHubIcon/>}
-                                    >
-                                        {isPending ? "Loading..." : "Sign In With Github"}
-                                    </Button>
-                                </Stack>
-                            </button>
+            <div>
 
-                        </form>
+                <div className="wrapper">
+                    <div className="clash-card barbarian">
+                        <div className="clash-card__image clash-card__image--barbarian">
+                            {/*github url*/}
+                            <img src="https://www.tinkerhub.org/files/LogoBLACK.png"
+                                 alt="github"/>
+                        </div>
+
+                        <div className="clash-card__unit-name">Welcome to TinkerSpace!
+                        </div>
+                        <div className="clash-card__unit-description">
+
+
+                            Thank you for choosing TinkerSpace for your learning and discovery needs. We hope you have a
+                            great time exploring all that we have to offer. If you have any questions or need help, don't
+                            hesitate to reach out to us.
+
+                            Happy tinkering!
+                        </div>
+                        <div className="clash-card__level clash-card__level--barbarian">Level 4</div>
+                        <button onClick={login}
+                                className="clash-card__unit-stats clash-card__unit-stats--barbarian clearfix">
+                            {isPending ? "Loading..." : "Sign in with GitHub"}
+                        </button>
+
                     </div>
+
                 </div>
+
             </div>
-        </section>
-    ) : (
-        <div>
-            {<h1>you are logged in as {rank}th user </h1>}
-        </div>
-    );
+        ) :
+        (
+            <div>
+
+                <div className="wrapper">
+                    <div className="clash-card barbarian">
+                        <div className="clash-card__image clash-card__image--barbarian">
+                            <img src={user.photoURL} alt={user.displayName}/>
+                        </div>
+
+                        <div className="clash-card__unit-name"><span
+                            className="little-text">Hi </span> {user.displayName}
+                        </div>
+                        <div className="clash-card__unit-description">
+                            Congratulations, on coming to TinkerSpace!hope you have a great time and learn a lot
+                            of new things while you're there. If you have any questions or need any assistance, don't
+                            hesitate to ask. Enjoy your time at TinkerSpace!
+                        </div>
+                        <div className="clash-card__unit-stats clash-card__unit-stats--barbarian clearfix">
+                            your are the {rank} <span className="little-text">{ordinal_suffix_of(rank)}</span> user joining TinkerSpace
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        );
 
 };
 
