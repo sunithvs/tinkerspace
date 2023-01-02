@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react'
 // read user data from firestore
 import {collection, getDocs} from "firebase/firestore";
 import {db} from '../../firebase/config';
+import "../../App.css"
+import backgroundVideo from "../../images/4K_8.mp4"
 
 const image_width = 100;
 const image_padding = 10;
@@ -29,7 +31,11 @@ class Imageobject extends GameObject {
         //Set default width and height
         this.radius = 82;
     }
-
+    randomColor() {
+        //     return a random color from a list of colors
+        const colors = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#9400D3"];
+        return colors[Math.floor(Math.random() * colors.length)];
+    };
     draw() {
         const logo = new Image();
         logo.src = this.src;
@@ -38,14 +44,8 @@ class Imageobject extends GameObject {
         //  add a border rectangle to the image
         this.context.beginPath();
 
-        function randomColor() {
-            //     return a random color from a list of colors
-            const colors = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#9400D3"];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-
         // fill the rectangle with a color from a array of colors
-        this.context.fillStyle = randomColor();
+        this.context.fillStyle = this.randomColor();
         this.context.fillRect(this.x - this.padding / 2, this.y - this.padding / 2, image_width + this.padding, image_width + this.padding);
 
 
@@ -91,7 +91,7 @@ class GameWorld {
     createWorld() {
         let objectArray = [];
         for (let i = 0; i < this.users.length; i++) {
-            objectArray.push(new Imageobject(this.context, getRndXY(), getRndXY(), getRndXY() % 100, getRndXY() % 50, this.users[i].profile_url));
+            objectArray.push(new Imageobject(this.context, getRndXY(), getRndXY(), getRndXY() , getRndXY(), this.users[i].profile_url));
         }
 
 
@@ -259,16 +259,16 @@ const Home = (props) => {
 
     }, [])
 
-    return (
-        <div className={"flex object-cover"}>
-            <div>
+    return ( <div>
 
-            </div>
-            <div>
+                <video autoPlay muted id = 'background-video' >
+                    <source src={backgroundVideo}/>
+                </video>
                 <canvas id="canvas"></canvas>
-
-            </div>
         </div>
+
+
+
     )
 }
 
