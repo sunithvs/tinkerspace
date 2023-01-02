@@ -3,15 +3,14 @@ import Stack from "@mui/material/Stack";
 import * as React from "react";
 import {useLogin} from "../../hooks/useLogin";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import {useState} from "react";
 
 const SignIn = () => {
-    const {login, isPending} = useLogin();
-    return (
+    // logen in  state
+    const {login, isPending, rank} = useLogin();
+    return !rank ? (
         <section className="bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-
-                TinkerWall
-
                 <div
                     className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="flex justify-center p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -26,7 +25,7 @@ const SignIn = () => {
                                 <Stack direction="row" spacing={2}>
                                     <Button
                                         variant="outlined"
-                                        onClick={login}
+                                        onClick={() => login()}
                                         startIcon={<GitHubIcon/>}
                                     >
                                         {isPending ? "Loading..." : "Sign In With Github"}
@@ -39,14 +38,12 @@ const SignIn = () => {
                 </div>
             </div>
         </section>
-
-        // <div className="App">
-        //   <button className="btn" onClick={login}>
-        //     {isPending ? "Loading..." : "Login With Github"}
-        //   </button>
-        //   <button className="btn">Log Out</button>
-        // </div>
+    ) : (
+        <div>
+            {<h1>you are logged in as {rank}th user </h1>}
+        </div>
     );
+
 };
 
 export default SignIn;
