@@ -5,7 +5,7 @@ import pic from '../../images/picture.png';
 // myImage.src = 'picture.png';
 // document.body.appendChild(myImage);
 
-
+const image_width =100;
 class GameObject {
     constructor(context, x, y, vx, vy) {
         this.context = context;
@@ -17,34 +17,6 @@ class GameObject {
     }
 }
 
-
-class Circle extends GameObject {
-    constructor(context, x, y, vx, vy) {
-        //Pass params to super class
-        super(context, x, y, vx, vy);
-
-        //Set default width and height
-        this.radius = 25;
-    }
-
-    draw() {
-        //Draw a simple square
-        this.context.strokeStyle = this.isColliding ? "#ff8080" : "#0099b0";
-        this.context.lineWidth = 3;
-        this.context.beginPath();
-        this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-        this.context.stroke();
-    }
-
-    update(secondsPassed) {
-        const canvasWidth = window.innerWidth;
-        const canvasHeight = window.innerHeight;
-
-        //Move with velocity x/y
-        this.x += this.vx * secondsPassed;
-        this.y += this.vy * secondsPassed;
-    }
-}
 
 class Imageobject extends GameObject {
     logo;
@@ -58,41 +30,18 @@ class Imageobject extends GameObject {
         this.radius = 82;
     }
 
-    drawRoundedImage(image, x, y, width, height, radius) {
-        // Create a path for the image with rounded corners
-        this.context.beginPath();
-        this.context.moveTo(x + radius, y);
-        this.context.lineTo(x + width - radius, y);
-        this.context.quadraticCurveTo(x + width, y, x + width, y + radius);
-        this.context.lineTo(x + width, y + height - radius);
-        this.context.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-        this.context.lineTo(x + radius, y + height);
-        this.context.quadraticCurveTo(x, y + height, x, y + height - radius);
-        this.context.lineTo(x, y + radius);
-        this.context.quadraticCurveTo(x, y, x + radius, y);
-        this.context.closePath();
-
-        // Clip the image to the path
-        this.context.clip();
-
-        // Draw the image
-        this.context.drawImage(image, x, y, width, height);
-    }
-
     draw() {
         const logo = new Image();
         logo.src = pic;
-        logo.width = 50;
-        logo.height = 50;
+        logo.width = image_width;
+        logo.height = image_width;
         //Draw a simple image
-        this.context.drawImage(logo, this.x, this.y, 150, 150);
+        this.context.drawImage(logo, this.x, this.y, image_width, image_width);
 
         // this.drawRoundedImage(logo,0,window.innerHeight-100,100,100,50)
     }
 
     update(secondsPassed) {
-        const canvasWidth = window.innerWidth;
-        const canvasHeight = window.innerHeight;
 
         //Move with velocity x/y
         this.x += this.vx * secondsPassed;
@@ -126,13 +75,11 @@ class GameWorld {
 
     createWorld() {
         let objectarray = []
-        let howmanycircles = 3
+        let howmanycircles = 10
 
         for (let i = 0; i < howmanycircles; i++) {
 
-            // objectarray[i] = new Circle(this.context, getRndXY()[0], getRndXY()[1], getRndXY()[0] % 100, getRndXY()[1] % 50)
             objectarray[i] = new Imageobject(this.context, getRndXY()[0], getRndXY()[1], getRndXY()[0] % 100, getRndXY()[1] % 50)
-
 
         }
 
@@ -256,12 +203,9 @@ class GameWorld {
     }
 
     circleIntersect(x1, y1, r1, x2, y2, r2) {
-        // Calculate the distance between the two circles
-        var distance = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-
-        // When the distance is smaller or equal to the sum
-        // of the two radius, the circles overlap
-        return distance <= (r1 + r2) * (r1 + r2);
+            if(x2 < x1+ image_width && x2 > x1-image_width && y2 < y1+ image_width && y2 > y1-image_width )
+                return true
+            return  false
     }
 
     clearCanvas() {
