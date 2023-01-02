@@ -85,7 +85,7 @@ class GameWorld {
         let userlength = this.users.length
         console.log("userlength " + userlength)
         for (let i = 0; i < userlength; i++) {
-            objectArray.push(new Imageobject(this.context, getRndXY()[0], getRndXY()[1], getRndXY()[0] % 100, getRndXY()[1] % 50, this.users[i].profile_url));
+            objectArray.push(new Imageobject(this.context, getRndXY(), getRndXY(), getRndXY() % 100, getRndXY() % 50, this.users[i].profile_url));
         }
 
 
@@ -127,8 +127,8 @@ class GameWorld {
             obj1 = this.gameObjects[i];
             obj1.isColliding = false;
 
-            const canvasWidth = window.innerWidth -420;
-            const canvasHeight = window.innerHeight - 100;
+            const canvasWidth = window.innerWidth;
+            const canvasHeight = window.innerHeight;
             if (obj1.x < obj1.radius) {
                 obj1.vx = Math.abs(obj1.vx) * 0.9;
                 obj1.x = obj1.radius;
@@ -220,9 +220,8 @@ class GameWorld {
 }
 
 function getRndXY() {
-    let x = Math.floor(Math.random() * (window.innerWidth));
-    let y = Math.floor(Math.random() * (window.innerHeight));
-    return [x, y]
+    return Math.floor(Math.random() * (window.innerWidth));
+
 }
 
 
@@ -256,11 +255,15 @@ const Home = (props) => {
 
     return (
         <div className={"flex object-cover"}>
-            <img src= {qrimage} alt=""/>
-            <canvas id="canvas"></canvas>
+            <div>
+
+            </div>
+            <div>
+                <canvas id="canvas"></canvas>
+
+            </div>
         </div>
     )
 }
-
 
 export default Home;
