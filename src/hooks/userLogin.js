@@ -1,7 +1,16 @@
 import {GithubAuthProvider, signInWithPopup} from "firebase/auth";
 import {auth} from "../firebase/config";
 import {useState} from "react";
+import {collection, addDoc,getDoc} from "firebase/firestore";
+import {db} from '../firebase/config';
 
+const add_profile = async () => {
+    await addDoc(collection(db, "users"), {
+        id: auth.currentUser.uid,
+        name: auth.currentUser.displayName,
+        profile_url: auth.currentUser.photoURL,
+    });
+}
 export const useLogin = () => {
     const [error, setError] = useState(false);
     const [isPending, setIsPending] = useState(false);
@@ -19,6 +28,8 @@ export const useLogin = () => {
 
             const user = res.user;
             console.log(user);
+            // await add_profile();
+            // if already profile picture exists, then don't add it again
             setIsPending(false)
         } catch (error) {
             console.log(error);
