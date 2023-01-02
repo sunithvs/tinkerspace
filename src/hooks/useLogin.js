@@ -1,22 +1,30 @@
 import {GithubAuthProvider, signInWithPopup} from "firebase/auth";
 import {auth} from "../firebase/config";
 import {useState} from "react";
-import {collection, addDoc,getDoc} from "firebase/firestore";
+import {collection, addDoc} from "firebase/firestore";
+
 import {db} from '../firebase/config';
 
 const add_profile = async () => {
-    await addDoc(collection(db, "users"), {
-        id: auth.currentUser.uid,
-        name: auth.currentUser.displayName,
-        profile_url: auth.currentUser.photoURL,
-    });
+    try {
+        await addDoc(collection(db, "users"), {
+            id: auth.currentUser.uid,
+            name: auth.currentUser.displayName,
+            profile_url: auth.currentUser.photoURL,
+        });
+    } catch (e) {
+        console.error("Error adding document: ", e);
+    }
+
 }
 export const useLogin = () => {
+
     const [error, setError] = useState(false);
     const [isPending, setIsPending] = useState(false);
     const provider = new GithubAuthProvider();
 
     const login = async () => {
+        console.log("login")
         setError(null);
         setIsPending(true);
 
@@ -28,8 +36,12 @@ export const useLogin = () => {
 
             const user = res.user;
             console.log(user);
-            // await add_profile();
-            // if already profile picture exists, then don't add it again
+            // read user data from firestore
+            // const userRef = collection(db, "users");
+
+            await add_profile();
+            console.log("added profile");
+            // const docRef = getDoc(db, "users", user.uid);
             setIsPending(false)
         } catch (error) {
             console.log(error);

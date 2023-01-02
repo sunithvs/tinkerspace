@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react'
-import pic from '../../images/picture.png';
+// read user data from firestore
+import {collection, getDocs} from "firebase/firestore";
+import {db} from '../../firebase/config';
 
-// const myImage = new Image(100);
-// myImage.src = 'picture.png';
-// document.body.appendChild(myImage);
+const image_width = 100;
 
-const image_width =100;
 class GameObject {
     constructor(context, x, y, vx, vy) {
         this.context = context;
@@ -21,18 +20,18 @@ class GameObject {
 class Imageobject extends GameObject {
     logo;
 
-    constructor(context, x, y, vx, vy) {
+    constructor(context, x, y, vx, vy, src) {
         //Pass params to super class
         super(context, x, y, vx, vy);
 
-
+        this.src = src;
         //Set default width and height
         this.radius = 82;
     }
 
     draw() {
         const logo = new Image();
-        logo.src = "https://cataas.com/cat";
+        logo.src = this.src;
         logo.width = image_width;
         logo.height = image_width;
         //Draw a simple image
@@ -54,11 +53,13 @@ class Imageobject extends GameObject {
 class GameWorld {
     // Trigger init function when the page has loaded
 
-    constructor() {
+    constructor(users) {
         this.canvas = null;
         this.context = null;
         this.oldTimeStamp = 0;
         this.gameObjects = [];
+
+        this.users = users;
     }
 
     init(canvas) {
@@ -75,16 +76,14 @@ class GameWorld {
 
 
     createWorld() {
-        let objectarray = []
-        let howmanycircles = 10
-
-        for (let i = 0; i < howmanycircles; i++) {
-
-            objectarray[i] = new Imageobject(this.context, getRndXY()[0], getRndXY()[1], getRndXY()[0] % 100, getRndXY()[1] % 50)
+        let objectArray = [];
+        console.log(this.users);
+        for (let i = 0; i < this.users.length; i++) {
+            objectArray[i] = new Imageobject(this.context, getRndXY()[0], getRndXY()[1], getRndXY()[0] % 100, getRndXY()[1] % 50, this.users[i].photoURL);
 
         }
 
-        this.gameObjects = objectarray;
+        this.gameObjects = objectArray;
     }
 
 
@@ -117,7 +116,7 @@ class GameWorld {
         var obj2;
 
         //console.log("[GameWorld] " + "secondspassed: ", secondsPassed);
-        for (var i = 0; i < this.gameObjects.length; i++) {
+        for (let i = 0; i < this.gameObjects.length; i++) {
             obj1 = this.gameObjects[i];
             obj1.isColliding = false;
 
@@ -143,7 +142,7 @@ class GameWorld {
             }
         }
 
-        for (var i = 0; i < this.gameObjects.length; i++) {
+        for (let i = 0; i < this.gameObjects.length; i++) {
             obj1 = this.gameObjects[i];
             //obj1.isColliding = false;
             for (var j = i + 1; j < this.gameObjects.length; j++) {
@@ -204,9 +203,8 @@ class GameWorld {
     }
 
     circleIntersect(x1, y1, r1, x2, y2, r2) {
-        if(x2 < x1+ image_width && x2 > x1-image_width && y2 < y1+ image_width && y2 > y1-image_width )
-            return true
-        return  false
+        return x2 < x1 + image_width && x2 > x1 - image_width && y2 < y1 + image_width && y2 > y1 - image_width;
+
     }
 
     clearCanvas() {
@@ -225,14 +223,27 @@ function getRndXY() {
 // Init when page loads
 
 const Home = (props) => {
+    // users state
 
     useEffect(() => {
+        const  users =[]
         const canvas = document.getElementById("canvas");
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.height = window.innerHeight
+        const userRef = collection(db, "users");
+        // get all users
+
+        getDocs(userRef).then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    users.push(data);
+                });
+
+            }
+        );
 
 
-        const gameWorld = new GameWorld();
+        const gameWorld = new GameWorld(users);
         gameWorld.init(canvas)
 
 
