@@ -77,7 +77,6 @@ const SignIn = () => {
                         </div>
                         <div className="clash-card__unit-stats clash-card__unit-stats--barbarian clearfix">
                             your are the {rank} <span className="little-text">{ordinal_suffix_of(rank)}</span> user joining TinkerSpace
-
                         </div>
 
                     </div>
