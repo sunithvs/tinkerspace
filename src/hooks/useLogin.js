@@ -1,22 +1,10 @@
 import {GithubAuthProvider, signInWithPopup} from "firebase/auth";
 import {auth} from "../firebase/config";
 import {useState} from "react";
-import {collection, addDoc, setDoc, doc} from "firebase/firestore";
 
 import {db} from '../firebase/config';
+import {collection, getDocs, setDoc, doc} from "firebase/firestore";
 
-const add_profile = async () => {
-    try {
-        await addDoc(collection(db, "users"), {
-            id: auth.currentUser.uid,
-            name: auth.currentUser.displayName,
-            profile_url: auth.currentUser.photoURL,
-        });
-    } catch (e) {
-        console.error("Error adding document: ", e);
-    }
-
-}
 const set_profile = async () => {
     try {
         await setDoc(doc(db, "users", auth.currentUser.uid), {
@@ -33,13 +21,13 @@ export const useLogin = () => {
 
     const [error, setError] = useState(false);
     const [isPending, setIsPending] = useState(false);
+    const [rank, setRank] = useState(0);
+
     const provider = new GithubAuthProvider();
 
-    const login = async () => {
-        console.log("login")
+    const login = async (setLoggedIn) => {
         setError(null);
         setIsPending(true);
-
         try {
             const res = await signInWithPopup(auth, provider);
             if (!res) {
@@ -49,16 +37,31 @@ export const useLogin = () => {
             console.log(user);
             // read user data from firestore
             // const userRef = collection(db, "users");
-            await set_profile();
+            await set_profile()
+            // get all user data from firestore
+            const userRef = collection(db, "users");
+            let i = 1;
+
+            getDocs(userRef).then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        if (data.email === user.email)
+                            setRank(i);
+                        i++;
+                    });
+                }
+            );
+
             console.log("added profile");
             // const docRef = getDoc(db, "users", user.uid);
-            setIsPending(false)
+            setIsPending(false);
+
+
         } catch (error) {
             console.log(error);
             setError(error.message);
             setIsPending(false);
         }
     };
-
-    return {login, error, isPending};
+    return {login, error, isPending, rank};
 };
